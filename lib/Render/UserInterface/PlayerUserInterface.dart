@@ -19,9 +19,8 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
   void initState() {
     super.initState();
 
+    // Set the library path based on the current OS.
     setlibrary_Path();
-
-    //print("\nHELLOHELOO ${getLibraryPath()}\n}");
 
     // Create the audio player.
     player = AudioPlayer();
@@ -33,7 +32,7 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //await player.setSource(AssetSource('ambient_c_motion.mp3'));
       // await player.setSource(getLibraryPath() + "/test.mp3");
-      print("\nHELLOHELOO33232 ${await doesFileExist()}\n");
+      print("\nDoes test File exist? ${await doesFileExist()}\n");
 
 
       await player.setSource(DeviceFileSource("/sdcard/Music/test.mp3"));
