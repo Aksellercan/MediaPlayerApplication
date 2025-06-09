@@ -102,6 +102,20 @@ class _PlayerWidgetState extends State<PlayerWidget> {
               icon: const Icon(Icons.stop),
               color: color,
             ),
+            IconButton(
+              key: const Key('next_button'),
+              onPressed: null, // Implement next functionality if needed
+              iconSize: 48.0,
+              icon: const Icon(Icons.skip_next),
+              color: color,
+            ),
+            IconButton(
+              key: const Key('previous_button'),
+              onPressed: null, // Implement previous functionality if needed
+              iconSize: 48.0,
+              icon: const Icon(Icons.skip_previous),
+              color: color,
+            ),
           ],
         ),
         Slider(

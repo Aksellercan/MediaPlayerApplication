@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 String library_Path = "";
 String currentOS = "";
+List mediaList = List.empty(growable: true);
 
 bool doesFolderExist(String path) {
   return true;
@@ -24,11 +25,12 @@ Future<void> setlibrary_Path() async {
       // Ask for storage permission first
       var status = await Permission.manageExternalStorage.request();
       if (status.isGranted) {
-        final publicMusicDir = Directory("/storage/emulated/0/Music");
+        final publicMusicDir = Directory("/sdcard/Music");
         if (await publicMusicDir.exists()) {
           library_Path = publicMusicDir.path;
         } else {
           print("Public music folder not found!");
+          makeFolders();
         }
         } else if (status.isPermanentlyDenied) {
           openAppSettings();
@@ -47,7 +49,7 @@ Future<void> setlibrary_Path() async {
 }
 
 Future<bool> doesFileExist() async {
-  final path = '${getLibraryPath}/test.mp3';
+  final path = '${getLibraryPath}/test1.mp3';
   final file = File(path);
   if (!await file.exists ()) {
   print('❌ File NOT found at: $path');
@@ -61,6 +63,10 @@ get getLibraryPath {
   return library_Path;
 }
 
+get getMediaList {
+  return mediaList;
+}
+
 void makeFolders(){
 
 }
@@ -68,5 +74,5 @@ void makeFolders(){
 void writeFiles() {}
 
 void readFiles() {
-
+  mediaList = Directory(library_Path).listSync().where((item) => item.path.endsWith('.mp3')).toList();
 }

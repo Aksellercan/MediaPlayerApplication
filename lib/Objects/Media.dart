@@ -1,12 +1,12 @@
 class Media {
   String title;
+  String path;
   int duration;
-  int position;
   DateTime addedAt;
   Media({
-    required this.position,
     required this.title,
     required this.duration,
+    required this.path,
     required this.addedAt,
   });
   //setters
@@ -19,8 +19,8 @@ class Media {
   set setAddedAt(DateTime addedAt) {
     this.addedAt = addedAt;
   }
-  set setPosition(int position) {
-    this.position = position;
+  set setPath(String path) {
+    this.path = path;
   }
   //getters
   String get getTitle {
@@ -32,8 +32,8 @@ class Media {
   DateTime get getAddedAt {
     return addedAt;
   }
-  int get getPosition{
-    return position;
+  String get getPath {
+    return path;
   }
   //toString method
   @override
