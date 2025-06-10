@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:media_player_application/Objects/Media.dart';
 
 String library_Path = "";
 String currentOS = "";
-List mediaList = List.empty(growable: true);
+List<Media> mediaList = List.empty(growable: true);
 
 bool doesFolderExist(String path) {
   return true;
@@ -15,6 +17,8 @@ String getOS() {
     return "Android";
   } else if (Platform.isIOS) {
     return "iOS";
+  } else if (kIsWeb) {
+    return "Web";
   }
   return "Unknown OS";
 }
@@ -48,17 +52,6 @@ Future<void> setlibrary_Path() async {
   print("Library Path: $library_Path");
 }
 
-Future<bool> doesFileExist() async {
-  final path = '${getLibraryPath}/test1.mp3';
-  final file = File(path);
-  if (!await file.exists ()) {
-  print('❌ File NOT found at: $path');
-  return false;
-  }
-  print('✅ Found file: $path');
-  return true;
-}
-
 get getLibraryPath {
   return library_Path;
 }
@@ -74,5 +67,17 @@ void makeFolders(){
 void writeFiles() {}
 
 void readFiles() {
-  mediaList = Directory(library_Path).listSync().where((item) => item.path.endsWith('.mp3')).toList();
+  final dir = Directory(library_Path);
+  final files = dir.listSync().where((item) => item is File && item.path.endsWith('.mp3'));
+  mediaList = files.map((fileEntity) {
+    final file = File(fileEntity.path);
+    final title = file.uri.pathSegments.last;
+    final path = file.path;
+    final stat = file.statSync();
+    return Media(
+        title: title,
+        path: path,
+        addedAt: stat.changed
+    );
+  }).toList();
 }

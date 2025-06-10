@@ -26,19 +26,14 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
     // Set the release mode to keep the source after playback has completed.
     player.setReleaseMode(ReleaseMode.stop);
 
-    // Start the player as soon as the app is displayed.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Set the library path based on the current OS.
       await setlibrary_Path();
       readFiles();
       Loop.printList();
-      await doesFileExist();
       setState(() {
         mediaList = getMediaList;
       });
-      //await player.setSource(AssetSource('ambient_c_motion.mp3'));
-      //await player.setSource(DeviceFileSource(getLibraryPath + "/test.mp3"));
-      //await player.resume(); //Start playback immediately
     });
   }
 
@@ -55,8 +50,8 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: const Text('Simple MP3 Player')
+          backgroundColor: Colors.black,
+          title: const Text('MP3 Player', style: TextStyle(color: Colors.white),),
       ),
       body: Column(
         children: [
@@ -65,11 +60,14 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
               itemCount: mediaList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Icon(Icons.music_note, color: Colors.orangeAccent),
+                  leading: Icon(Icons.music_note, color: Colors.blueAccent),
                   title: Text(mediaList[index].toString()),
                   textColor: Colors.white,
                   onTap: () async {
-
+                    setState(() {
+                      Loop.setIndex = index;
+                    });
+                    // Loop.setIndex = index;
                     // Set the source to the selected file.
                     await player.setSource(
                       DeviceFileSource(mediaList[index].path),
@@ -81,12 +79,12 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
             ),
           ),
           Container(
-            color: Colors.orange,
+            color: Colors.blue,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Now Playing ${player.playerId}',
+                  'Now Playing ${getMediaList[Loop.getIndex].getTitle}',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
                 PlayerWidget(player: player),

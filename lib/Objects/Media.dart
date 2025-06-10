@@ -1,11 +1,9 @@
 class Media {
   String title;
   String path;
-  int duration;
   DateTime addedAt;
   Media({
     required this.title,
-    required this.duration,
     required this.path,
     required this.addedAt,
   });
@@ -13,9 +11,7 @@ class Media {
   set setTitle(String title) {
     this.title = title;
   }
-  set setDuration(int duration) {
-    this.duration = duration;
-  }
+
   set setAddedAt(DateTime addedAt) {
     this.addedAt = addedAt;
   }
@@ -26,9 +22,6 @@ class Media {
   String get getTitle {
     return title;
   }
-  int get getDuration {
-    return duration;
-  }
   DateTime get getAddedAt {
     return addedAt;
   }
@@ -38,6 +31,6 @@ class Media {
   //toString method
   @override
   String toString() {
-    return 'Media(title: $title, duration: $duration, addedAt: $addedAt)';
+    return '$title\naddedAt: $addedAt';
   }
 }

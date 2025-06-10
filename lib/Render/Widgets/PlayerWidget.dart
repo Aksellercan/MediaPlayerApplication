@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:media_player_application/Files/FileList.dart' as FileList;
+import 'package:media_player_application/Utilities/FileUtil.dart' as FileUtil;
 
 class PlayerWidget extends StatefulWidget {
   final AudioPlayer player;
@@ -74,13 +76,20 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryColor;
+    final color = Colors.white;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconButton(
+              key: const Key('previous_button'),
+              onPressed: _isPlaying || _isPaused ? _previous : null,
+              iconSize: 48.0,
+              icon: const Icon(Icons.skip_previous),
+              color: color,
+            ),
             IconButton(
               key: const Key('play_button'),
               onPressed: _isPlaying ? null : _play,
@@ -104,16 +113,9 @@ class _PlayerWidgetState extends State<PlayerWidget> {
             ),
             IconButton(
               key: const Key('next_button'),
-              onPressed: null, // Implement next functionality if needed
+              onPressed: _isPlaying || _isPaused ? _next : null,
               iconSize: 48.0,
               icon: const Icon(Icons.skip_next),
-              color: color,
-            ),
-            IconButton(
-              key: const Key('previous_button'),
-              onPressed: null, // Implement previous functionality if needed
-              iconSize: 48.0,
-              icon: const Icon(Icons.skip_previous),
               color: color,
             ),
           ],
@@ -140,7 +142,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
               : _duration != null
               ? _durationText
               : '',
-          style: const TextStyle(fontSize: 16.0),
+          style: const TextStyle(fontSize: 16.0, color: Colors.white),
         ),
       ],
     );
@@ -155,10 +157,19 @@ class _PlayerWidgetState extends State<PlayerWidget> {
           (p) => setState(() => _position = p),
     );
 
-    _playerCompleteSubscription = player.onPlayerComplete.listen((event) {
+    _playerCompleteSubscription = player.onPlayerComplete.listen((event) { //on song completion state
       setState(() {
         _playerState = PlayerState.stopped;
         _position = Duration.zero;
+        int indexChange = FileList.nextSong(FileList.getIndex);
+        if (indexChange != -1) {
+          setState((){
+            FileList.setIndex = indexChange;
+          });
+          // FileList.setIndex = indexChange;
+          player.setSource(DeviceFileSource(FileUtil.getMediaList[indexChange].path));
+          player.resume();
+        }
       });
     });
 
@@ -186,5 +197,22 @@ class _PlayerWidgetState extends State<PlayerWidget> {
       _playerState = PlayerState.stopped;
       _position = Duration.zero;
     });
+  }
+
+  void _next() {
+    int nextIndex = FileList.nextSong(FileList.getIndex);
+    if (nextIndex != -1) {
+      FileList.setIndex = nextIndex;
+      player.setSource(DeviceFileSource(FileUtil.getMediaList[nextIndex].path));
+      player.resume();
+    }
+  }
+  void _previous() {
+    int prevIndex = FileList.prevSong(FileList.getIndex);
+    if (prevIndex != -1) {
+      FileList.setIndex = prevIndex;
+      player.setSource(DeviceFileSource(FileUtil.getMediaList[prevIndex].path));
+      player.resume();
+    }
   }
 }
