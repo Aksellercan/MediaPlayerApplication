@@ -2,8 +2,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Widgets/PlayerWidget.dart';
-import 'package:media_player_application/Files/FileList.dart' as Loop;
-import 'package:media_player_application/Utilities/FileUtil.dart';
+import 'package:media_player_application/Files/FileList.dart' as FileList;
+import 'package:media_player_application/Utilities/FileUtil.dart' as FileUtil;
 
 class SimpleExampleApp extends StatefulWidget {
   const SimpleExampleApp();
@@ -28,11 +28,11 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Set the library path based on the current OS.
-      await setlibrary_Path();
-      readFiles();
-      Loop.printList();
+      await FileUtil.setlibrary_Path();
+      FileUtil.readFiles();
+      FileList.printList();
       setState(() {
-        mediaList = getMediaList;
+        mediaList = FileUtil.getMediaList;
       });
     });
   }
@@ -65,7 +65,7 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
                   textColor: Colors.white,
                   onTap: () async {
                     setState(() {
-                      Loop.setIndex = index;
+                      FileList.setIndex = index;
                     });
                     // Loop.setIndex = index;
                     // Set the source to the selected file.
@@ -84,7 +84,7 @@ class _SimpleExampleAppState extends State<SimpleExampleApp> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Now Playing ${getMediaList[Loop.getIndex].getTitle}',
+                  'Playing ${FileUtil.getMediaList[FileList.getIndex].getTitle}',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
                 PlayerWidget(player: player),

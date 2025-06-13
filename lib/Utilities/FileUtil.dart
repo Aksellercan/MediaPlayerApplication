@@ -12,7 +12,7 @@ bool doesFolderExist(String path) {
   return true;
 }
 
-String getOS() {
+String _getOS() {
   if (Platform.isAndroid) {
     return "Android";
   } else if (Platform.isIOS) {
@@ -24,12 +24,12 @@ String getOS() {
 }
 
 Future<void> setlibrary_Path() async {
-  currentOS = getOS();
+  currentOS = _getOS();
   if (currentOS == "Android") {
       // Ask for storage permission first
       var status = await Permission.manageExternalStorage.request();
       if (status.isGranted) {
-        final publicMusicDir = Directory("/sdcard/Music");
+        final publicMusicDir = Directory("/sdcard/Music"); //files should be in /sdkgphonex86_64/Music
         if (await publicMusicDir.exists()) {
           library_Path = publicMusicDir.path;
         } else {
